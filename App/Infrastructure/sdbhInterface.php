@@ -3,7 +3,7 @@
 
 	interface sdbhInterface 
 	{
-		public function make_query($query, $reconnect = false);
+		public function make_query($query);
 		public function mselect_rows(
 			$tbl_name,
 			$select_array,
@@ -13,6 +13,9 @@
 			$deadlock_up = False,
 			$lock_mode = Null
 		);
+
+		// добавляем в интерфейс новый метод, чтобы не забыть его реализовать в будущем
+		public function get_tariff($product_id);
 
 	}
 
