@@ -1,6 +1,8 @@
 <?php
 require_once 'App/Infrastructure/sdbh.php'; use sdbh\sdbh;
+require_once 'App/Infrastructure/dbAdapter.php';
 $dbh = new sdbh();
+$db = new dbAdapter($dbh);
 ?>
 <html>
 <head>
