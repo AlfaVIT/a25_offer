@@ -13,7 +13,7 @@
 
 		public function make_query($query, $reconnect = false)
 		{
-
+			return $this->sdbh->make_query($query, $reconnect);
 		}
 
 		public function mselect_rows(
@@ -26,7 +26,7 @@
 			$lock_mode = Null
 		)
 		{
-
+			return $this->sdbh->mselect_rows($tbl_name, $select_array, $from, $amount, $order_by, $order, $deadlock_up, $lock_mode);
 		}
 
 	}
