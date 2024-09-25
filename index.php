@@ -1,6 +1,9 @@
 <?php
 require_once 'App/Infrastructure/sdbh.php'; use sdbh\sdbh;
 $dbh = new sdbh();
+require_once 'App/Infrastructure/sdbhInterface.php';
+require_once 'App/Infrastructure/dbAdapter.php';
+$db = new dbAdapter($dbh);
 ?>
 <html>
 <head>
@@ -23,7 +26,7 @@ $dbh = new sdbh();
         <div class="col-12">
             <form action="App/calculate.php" method="POST" id="form">
 
-                <?php $products = $dbh->make_query('SELECT * FROM a25_products');
+                <?php $products = $db->make_query('SELECT * FROM a25_products');
                 if (is_array($products)) { ?>
                     <label class="form-label" for="product">Выберите продукт:</label>
                     <select class="form-select" name="product" id="product">
@@ -40,7 +43,7 @@ $dbh = new sdbh();
                 <label for="customRange1" class="form-label" id="count">Количество дней:</label>
                 <input type="number" name="days" class="form-control" id="customRange1" min="1" max="30">
 
-                <?php $services = unserialize($dbh->mselect_rows('a25_settings', ['set_key' => 'services'], 0, 1, 'id')[0]['set_value']);
+                <?php $services = unserialize($db->mselect_rows('a25_settings', ['set_key' => 'services'], 0, 1, 'id')[0]['set_value']);
                 if (is_array($services)) {
                     ?>
                     <label for="customRange1" class="form-label">Дополнительно:</label>
@@ -61,6 +64,14 @@ $dbh = new sdbh();
             </form>
 
             <h5>Итоговая стоимость: <span id="total-price"></span></h5>
+
+			<h5>Тариф:</h5>
+			<span id="tariff">
+			<?php
+				include("App/tariff.php");
+			?>
+			</span>
+
         </div>
     </div>
 </div>
@@ -83,6 +94,20 @@ $dbh = new sdbh();
                 }
             });
         });
+
+		$("#product").on("change", function(event) {
+            $.ajax({
+                url: 'App/tariff.php',
+                type: 'POST',
+                data: {'product':$(this).val()},
+                success: function(response) {
+                    $("#tariff").html(response);
+                },
+                error: function() {
+                    $("#tariff").html('Ошибка передачи данных');
+                }
+            });
+		})
     });
 </script>
 </body>
